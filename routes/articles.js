@@ -1,26 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const article = require('../models/article');
+const Article = require('../models/article');
 
-
-
-
-
-//Post with validation middleware
-app.post('/api/articles', validateArticle, async (req, res) => {
-    try {
-        const newArticle = new article(req.body);
-        const savedArticle = await newArticle.save();
-        res.status(201).json(savedArticle);
-    } catch (error) {
-        res.status(500).json({error: 'server error while creating article' });
-    }
-})
 
 //create a new article
 router.post('/', async (req, res) => {
     try {
-        const artRes = await article.create(req.body);
+        const artRes = await Article.create(req.body);
         res.status(201).json(artRes);
     }catch (err) {
         console.log(err)
@@ -30,7 +16,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const artRes = await article.find();
+        const artRes = await Article.find();
         res.json(artRes);
     } catch (err) {
         res.status(500).json({ error: err.message});
@@ -40,8 +26,8 @@ router.get('/', async (req, res) => {
 //Read a single article by ID
 router.get('/:id', async (req, res) => {
 try {
-    const artRes= await article.findById(req.params.id);
-    if(!article) return res.status(404).json({ message: 'Not found' });
+    const artRes= await Article.findById(req.params.id);
+    if(!artRes) return res.status(404).json({ message: 'Not found' });
     res.json(artRes);
 } catch (err) {
     res.status(500).json({ error: err.message });
@@ -51,7 +37,7 @@ try {
 //Update an article
 router.put('/:id', async (req, res) => {
     try {
-        const updated = await article.findByIdAndUpdate(
+        const updated = await Article.findByIdAndUpdate(
             req.params.id,
             req.body,
             {new: true} //return the updated document
@@ -66,8 +52,8 @@ router.put('/:id', async (req, res) => {
 //delete an article
 router.delete('/:id', async (req, res) => {
     try {
-        const artRes = await article.findByIdAndDelete(req.params.id);
-        if(!deleted) return res.status(404).json({message: 'Not found'});
+        const artRes = await Article.findByIdAndDelete(req.params.id);
+        if(!artRes) return res.status(404).json({message: 'Not found'});
         res.json({ message: 'article deleted'});
     }catch (err) {
         res.status(500).json({error: err.message});
